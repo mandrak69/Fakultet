@@ -1,0 +1,2 @@
+# Fakultet
+Fakultet inicijalni commit
