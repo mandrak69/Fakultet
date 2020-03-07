@@ -2,62 +2,90 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
+import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the student database table.
  * 
  */
 @Entity
-@NamedQuery(name="Student.findAll", query="SELECT s FROM Student s")
+@NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s")
 public class Student implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
-
-	private String datumrodjenja;
-
+	private int studentId;
+	private Date datumRodjenja;
 	private String ime;
-
+	private String indeks;
 	private String prezime;
-
-	//bi-directional many-to-one association to Studijskiprogram
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="studijski_id")
-	private Studijskiprogram studijskiprogram;
-
-	//bi-directional many-to-one association to Korisnik
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="tip_id")
-	private Korisnik korisnik;
+	private String telefon;
+	private List<Ispit> ispits;
+	private Profil profil;
+	private Smer smer;
 
 	public Student() {
 	}
 
-	public int getId() {
-		return this.id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "student_id")
+
+	public int getStudentId() {
+		return this.studentId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "datum_rodjenja")
+	public Date getDatumRodjenja() {
+		return this.datumRodjenja;
 	}
 
-	public String getDatumrodjenja() {
-		return this.datumrodjenja;
+	// bi-directional many-to-one association to Ispit
+	@OneToMany(mappedBy = "student")
+	public List<Ispit> getIspits() {
+		return this.ispits;
 	}
 
-	public void setDatumrodjenja(String datumrodjenja) {
-		this.datumrodjenja = datumrodjenja;
+	// bi-directional many-to-one association to Smer
+	@ManyToOne
+	@JoinColumn(name = "smer_id")
+	public Smer getSmer() {
+		return this.smer;
+	}
+
+	// bi-directional many-to-one association to Profil
+	@ManyToOne
+	@JoinColumn(name = "profil_id")
+	public Profil getProfil() {
+		return this.profil;
+	}
+
+	public void setIspits(List<Ispit> ispits) {
+		this.ispits = ispits;
+	}
+
+	public void setDatumRodjenja(Date datumRodjenja) {
+		this.datumRodjenja = datumRodjenja;
 	}
 
 	public String getIme() {
 		return this.ime;
 	}
 
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
+	}
+
 	public void setIme(String ime) {
 		this.ime = ime;
+	}
+
+	public String getIndeks() {
+		return this.indeks;
+	}
+
+	public void setIndeks(String indeks) {
+		this.indeks = indeks;
 	}
 
 	public String getPrezime() {
@@ -68,20 +96,41 @@ public class Student implements Serializable {
 		this.prezime = prezime;
 	}
 
-	public Studijskiprogram getStudijskiprogram() {
-		return this.studijskiprogram;
+	public String getTelefon() {
+		return this.telefon;
 	}
 
-	public void setStudijskiprogram(Studijskiprogram studijskiprogram) {
-		this.studijskiprogram = studijskiprogram;
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
 	}
 
-	public Korisnik getKorisnik() {
-		return this.korisnik;
+	public Ispit addIspit(Ispit ispit) {
+		getIspits().add(ispit);
+		ispit.setStudent(this);
+
+		return ispit;
 	}
 
-	public void setKorisnik(Korisnik korisnik) {
-		this.korisnik = korisnik;
+	public Ispit removeIspit(Ispit ispit) {
+		getIspits().remove(ispit);
+		ispit.setStudent(null);
+
+		return ispit;
+	}
+
+	public void setProfil(Profil profil) {
+		this.profil = profil;
+	}
+
+	public void setSmer(Smer smer) {
+		this.smer = smer;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [studentId=" + studentId + ", datumRodjenja=" + datumRodjenja + ", ime=" + ime + ", indeks="
+				+ indeks + ", prezime=" + prezime + ", telefon=" + telefon + ", ispits=" + ispits + ", profil=" + profil
+				+ ", smer=" + smer + "]";
 	}
 
 }

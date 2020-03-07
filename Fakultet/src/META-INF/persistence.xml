@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="Fakultet">
+	<persistence-unit name="Example01PU">
 		<class>model.Department</class>
-		<class>model.Korisnik</class>
+		<class>model.Ispit</class>
+		<class>model.Permission</class>
 		<class>model.Predmet</class>
 		<class>model.Profesor</class>
-		<class>model.ProfesorPK</class>
+		<class>model.ProfesorHasPredmet</class>
 		<class>model.Profil</class>
-		<class>model.Role</class>
-		<class>model.Semestar</class>
+		<class>model.Rola</class>
+		<class>model.Sluzbenik</class>
+		<class>model.Smer</class>
 		<class>model.Student</class>
-		<class>model.StudentHasIspiti</class>
-		<class>model.StudentHasIspitiPK</class>
-		<class>model.Studijskiprogram</class>
-		<class>model.StudijskiprogramHasPredmet</class>
-		<class>model.StudijskiprogramHasPredmetPK</class>
-		<class>model.Zvanja</class>
-		<class>model.ZvanjaHasProfesor</class>
-		<class>model.ZvanjaHasProfesorPK</class>
+		<class>model.SmerHasPredmet</class>
+		<class>model.SmerHasPredmetPK</class>
+		<class>model.Zvanje</class>
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/primer1"/>
+			<property name="javax.persistence.jdbc.user" value="root"/>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+		</properties>
 	</persistence-unit>
 </persistence>

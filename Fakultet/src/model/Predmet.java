@@ -4,87 +4,125 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The persistent class for the predmet database table.
  * 
  */
 @Entity
-@NamedQuery(name="Predmet.findAll", query="SELECT p FROM Predmet p")
+@NamedQuery(name = "Predmet.findAll", query = "SELECT p FROM Predmet p")
 public class Predmet implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
-
-	private int esp;
-
-	private String ime;
-
-	//bi-directional many-to-one association to Semestar
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Semestar semestar;
-
-	//bi-directional many-to-one association to StudijskiprogramHasPredmet
-	@OneToMany(mappedBy="predmet")
-	private List<StudijskiprogramHasPredmet> studijskiprogramHasPredmets;
+	private int predmetId;
+	private String espb;
+	private String naziv;
+	private List<Profesor> profesors;
+	private List<ProfesorHasPredmet> profesorHasPredmets;
+	private List<Smer> smers;
+	private List<SmerHasPredmet> smerHasPredmets;
 
 	public Predmet() {
 	}
 
-	public int getId() {
-		return this.id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "predmet_id")
+	public int getPredmetId() {
+		return this.predmetId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	// bi-directional many-to-many association to Profesor
+	@ManyToMany(mappedBy = "predmets")
+	public List<Profesor> getProfesors() {
+		return this.profesors;
 	}
 
-	public int getEsp() {
-		return this.esp;
+//bi-directional many-to-one association to SmerHasPredmet
+	@OneToMany(mappedBy = "predmet")
+	public List<SmerHasPredmet> getSmerHasPredmets() {
+		return this.smerHasPredmets;
 	}
 
-	public void setEsp(int esp) {
-		this.esp = esp;
+	// bi-directional many-to-many association to Smer
+	@ManyToMany(mappedBy = "predmets")
+	public List<Smer> getSmers() {
+		return this.smers;
 	}
 
-	public String getIme() {
-		return this.ime;
+	// bi-directional many-to-one association to ProfesorHasPredmet
+	@OneToMany(mappedBy = "predmet")
+	public List<ProfesorHasPredmet> getProfesorHasPredmets() {
+		return this.profesorHasPredmets;
 	}
 
-	public void setIme(String ime) {
-		this.ime = ime;
+	public void setProfesors(List<Profesor> profesors) {
+		this.profesors = profesors;
 	}
 
-	public Semestar getSemestar() {
-		return this.semestar;
+	public void setProfesorHasPredmets(List<ProfesorHasPredmet> profesorHasPredmets) {
+		this.profesorHasPredmets = profesorHasPredmets;
 	}
 
-	public void setSemestar(Semestar semestar) {
-		this.semestar = semestar;
+	public ProfesorHasPredmet addProfesorHasPredmet(ProfesorHasPredmet profesorHasPredmet) {
+		getProfesorHasPredmets().add(profesorHasPredmet);
+		profesorHasPredmet.setPredmet(this);
+
+		return profesorHasPredmet;
 	}
 
-	public List<StudijskiprogramHasPredmet> getStudijskiprogramHasPredmets() {
-		return this.studijskiprogramHasPredmets;
+	public ProfesorHasPredmet removeProfesorHasPredmet(ProfesorHasPredmet profesorHasPredmet) {
+		getProfesorHasPredmets().remove(profesorHasPredmet);
+		profesorHasPredmet.setPredmet(null);
+
+		return profesorHasPredmet;
 	}
 
-	public void setStudijskiprogramHasPredmets(List<StudijskiprogramHasPredmet> studijskiprogramHasPredmets) {
-		this.studijskiprogramHasPredmets = studijskiprogramHasPredmets;
+	public void setPredmetId(int predmetId) {
+		this.predmetId = predmetId;
 	}
 
-	public StudijskiprogramHasPredmet addStudijskiprogramHasPredmet(StudijskiprogramHasPredmet studijskiprogramHasPredmet) {
-		getStudijskiprogramHasPredmets().add(studijskiprogramHasPredmet);
-		studijskiprogramHasPredmet.setPredmet(this);
-
-		return studijskiprogramHasPredmet;
+	public String getEspb() {
+		return this.espb;
 	}
 
-	public StudijskiprogramHasPredmet removeStudijskiprogramHasPredmet(StudijskiprogramHasPredmet studijskiprogramHasPredmet) {
-		getStudijskiprogramHasPredmets().remove(studijskiprogramHasPredmet);
-		studijskiprogramHasPredmet.setPredmet(null);
+	public void setEspb(String espb) {
+		this.espb = espb;
+	}
 
-		return studijskiprogramHasPredmet;
+	public String getNaziv() {
+		return this.naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+
+	public void setSmers(List<Smer> smers) {
+		this.smers = smers;
+	}
+
+	public void setSmerHasPredmets(List<SmerHasPredmet> smerHasPredmets) {
+		this.smerHasPredmets = smerHasPredmets;
+	}
+
+	public SmerHasPredmet addSmerHasPredmet(SmerHasPredmet smerHasPredmet) {
+		getSmerHasPredmets().add(smerHasPredmet);
+		smerHasPredmet.setPredmet(this);
+
+		return smerHasPredmet;
+	}
+
+	public SmerHasPredmet removeSmerHasPredmet(SmerHasPredmet smerHasPredmet) {
+		getSmerHasPredmets().remove(smerHasPredmet);
+		smerHasPredmet.setPredmet(null);
+
+		return smerHasPredmet;
+	}
+
+	@Override
+	public String toString() {
+		return "Predmet [predmetId=" + predmetId + ", espb=" + espb + ", naziv=" + naziv + ", profesors=" + profesors
+				+ ", profesorHasPredmets=" + profesorHasPredmets + ", smers=" + smers + ", smerHasPredmets="
+				+ smerHasPredmets + "]";
 	}
 
 }

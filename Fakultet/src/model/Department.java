@@ -4,47 +4,53 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The persistent class for the department database table.
  * 
  */
 @Entity
-@NamedQuery(name="Department.findAll", query="SELECT d FROM Department d")
+@NamedQuery(name = "Department.findAll", query = "SELECT d FROM Department d")
 public class Department implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
-
-	private String ime;
-
-	//bi-directional many-to-one association to Profesor
-	@OneToMany(mappedBy="department")
+	private int departmentId;
+	private String naziv;
+	private String opis;
 	private List<Profesor> profesors;
 
 	public Department() {
 	}
 
-	public int getId() {
-		return this.id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "department_id")
+	public int getDepartmentId() {
+		return this.departmentId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getIme() {
-		return this.ime;
-	}
-
-	public void setIme(String ime) {
-		this.ime = ime;
-	}
-
+	// bi-directional many-to-one association to Profesor
+	@OneToMany(mappedBy = "department")
 	public List<Profesor> getProfesors() {
 		return this.profesors;
+	}
+
+	public void setDepartmentId(int departmentId) {
+		this.departmentId = departmentId;
+	}
+
+	public String getNaziv() {
+		return this.naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+
+	public String getOpis() {
+		return this.opis;
+	}
+
+	public void setOpis(String opis) {
+		this.opis = opis;
 	}
 
 	public void setProfesors(List<Profesor> profesors) {
@@ -63,6 +69,12 @@ public class Department implements Serializable {
 		profesor.setDepartment(null);
 
 		return profesor;
+	}
+
+	@Override
+	public String toString() {
+		return "Department [departmentId=" + departmentId + ", naziv=" + naziv + ", opis=" + opis + ", profesors="
+				+ profesors + "]";
 	}
 
 }

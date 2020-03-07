@@ -3,57 +3,86 @@ package model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-
+import java.util.List;
 
 /**
  * The persistent class for the profesor database table.
  * 
  */
 @Entity
-@NamedQuery(name="Profesor.findAll", query="SELECT p FROM Profesor p")
+@NamedQuery(name = "Profesor.findAll", query = "SELECT p FROM Profesor p")
 public class Profesor implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@EmbeddedId
-	private ProfesorPK id;
-
-	@Temporal(TemporalType.DATE)
-	private Date datum;
-
+	private int profesorId;
+	private Date datumRodnosa;
 	private String ime;
-
 	private String prezime;
-
-	private String profesorcol;
-
-	private String zvanje;
-
-	//bi-directional many-to-one association to Department
-	@ManyToOne(fetch=FetchType.LAZY)
+	private String telefon;
 	private Department department;
+	private List<Predmet> predmets;
+	private Profil profil;
+	private List<ProfesorHasPredmet> profesorHasPredmets;
 
-	//bi-directional many-to-one association to Korisnik
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="tip_id")
-	private Korisnik korisnik;
+	private Zvanje zvanje;
 
 	public Profesor() {
 	}
 
-	public ProfesorPK getId() {
-		return this.id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	@Column(name = "profesor_id")
+	public int getProfesorId() {
+		return this.profesorId;
 	}
 
-	public void setId(ProfesorPK id) {
-		this.id = id;
+	public void setProfesorId(int profesorId) {
+		this.profesorId = profesorId;
 	}
 
-	public Date getDatum() {
-		return this.datum;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "datum_rodnosa")
+	public Date getDatumRodnosa() {
+		return this.datumRodnosa;
 	}
 
-	public void setDatum(Date datum) {
-		this.datum = datum;
+// bi-directional many-to-one association to Department
+	@ManyToOne
+	@JoinColumn(name = "department_id")
+	public Department getDepartment() {
+		return this.department;
+	}
+
+// bi-directional many-to-one association to Zvanje
+	@ManyToOne
+	@JoinColumn(name = "zvanje_id")
+	public Zvanje getZvanje() {
+		return this.zvanje;
+	}
+
+	// bi-directional many-to-one association to ProfesorHasPredmet
+	@OneToMany(mappedBy = "profesor")
+	public List<ProfesorHasPredmet> getProfesorHasPredmets() {
+		return this.profesorHasPredmets;
+	}
+
+	// bi-directional many-to-one association to Profil
+	@ManyToOne
+	@JoinColumn(name = "profil_id")
+	public Profil getProfil() {
+		return this.profil;
+	}
+
+	// bi-directional many-to-many association to Predmet
+	@ManyToMany
+	@JoinTable(name = "profesor_has_predmet", joinColumns = {
+			@JoinColumn(name = "profesor_predmet_id") }, inverseJoinColumns = {
+					@JoinColumn(name = "predmet_profesor_id") })
+	public List<Predmet> getPredmets() {
+		return this.predmets;
+	}
+
+	public void setDatumRodnosa(Date datumRodnosa) {
+		this.datumRodnosa = datumRodnosa;
 	}
 
 	public String getIme() {
@@ -72,36 +101,49 @@ public class Profesor implements Serializable {
 		this.prezime = prezime;
 	}
 
-	public String getProfesorcol() {
-		return this.profesorcol;
+	public String getTelefon() {
+		return this.telefon;
 	}
 
-	public void setProfesorcol(String profesorcol) {
-		this.profesorcol = profesorcol;
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
 	}
 
-	public String getZvanje() {
-		return this.zvanje;
-	}
-
-	public void setZvanje(String zvanje) {
-		this.zvanje = zvanje;
-	}
-
-	public Department getDepartment() {
-		return this.department;
+	public void setPredmets(List<Predmet> predmets) {
+		this.predmets = predmets;
 	}
 
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
 
-	public Korisnik getKorisnik() {
-		return this.korisnik;
+	public void setProfil(Profil profil) {
+		this.profil = profil;
 	}
 
-	public void setKorisnik(Korisnik korisnik) {
-		this.korisnik = korisnik;
+	public void setProfesorHasPredmets(List<ProfesorHasPredmet> profesorHasPredmets) {
+		this.profesorHasPredmets = profesorHasPredmets;
+	}
+
+	public ProfesorHasPredmet addProfesorHasPredmet(ProfesorHasPredmet profesorHasPredmet) {
+		getProfesorHasPredmets().add(profesorHasPredmet);
+		profesorHasPredmet.setProfesor(this);
+
+		return profesorHasPredmet;
+	}
+
+	public ProfesorHasPredmet removeProfesorHasPredmet(ProfesorHasPredmet profesorHasPredmet) {
+		getProfesorHasPredmets().remove(profesorHasPredmet);
+		profesorHasPredmet.setProfesor(null);
+
+		return profesorHasPredmet;
+	}
+
+	@Override
+	public String toString() {
+		return "Profesor [profesorId=" + profesorId + ", datumRodnosa=" + datumRodnosa + ", ime=" + ime + ", prezime="
+				+ prezime + ", telefon=" + telefon + ", department=" + department + ", predmets=" + predmets
+				+ ", profil=" + profil + ", profesorHasPredmets=" + profesorHasPredmets + ", zvanje=" + zvanje + "]";
 	}
 
 }
